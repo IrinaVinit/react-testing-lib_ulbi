@@ -1,4 +1,4 @@
-import { render, screen } from "@testing-library/react";
+import { render, screen, fireEvent } from "@testing-library/react";
 import App from "./App";
 
 describe('TEST APP', () => {
@@ -8,7 +8,7 @@ describe('TEST APP', () => {
     const btn = screen.getByRole("button");
     const input = screen.getByPlaceholderText(/input value/i);
     expect(btn).toBeInTheDocument();
-    // expect(input).toBeInTheDocument();
+    expect(input).toBeInTheDocument();
     expect(helloElement).toBeInTheDocument();
     expect(input).toMatchSnapshot();
     screen.debug();
@@ -19,5 +19,16 @@ describe('TEST APP', () => {
     // expect(helloElement).toBeNull();
     const helloElement = await screen.findByText(/data/i);
     expect(helloElement).toBeInTheDocument();
+    expect(helloElement).toHaveStyle({color: 'red'});
+  });
+
+  test("click event", () => {
+    render(<App />);
+    const btn = screen.getByTestId("toogle-btn");
+    expect(screen.queryByTestId("toogle-el")).toBeNull();
+    fireEvent.click(btn);
+    expect(screen.queryByTestId("toogle-el")).toBeInTheDocument();
+    fireEvent.click(btn);
+    expect(screen.queryByTestId("toogle-el")).toBeNull();
   });
 });
